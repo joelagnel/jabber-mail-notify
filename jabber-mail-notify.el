@@ -15,6 +15,12 @@
 
 ;;; Code:
 
+(defun string-trim (str max)
+  (let ((str-len (length str)))
+    (subseq str 0
+            (or (and (< str-len max) str-len)
+                max))))
+
 (defun jabber-set-mode-line-notification (str)
   (interactive)
   (setq jabber-mode-line-newmail str))
@@ -82,7 +88,9 @@
          (snippet (jabber-get-mailthread-snippet mailthread))
          (senders (jabber-get-mailthread-senders mailthread))
          (sender-string (jabber-build-senders-string senders)))
-    (concat sender-string " says " subject ", " snippet "..")))
+    (concat sender-string " says "
+            (string-trim subject 15) ".., "
+            (string-trim snippet 30) "..")))
 
 ;; Called when google sends us a message of type "result"  sending us a list of messages
 ;; We take the list, display it in the minbuffer, and update tid and time variables
@@ -109,14 +117,13 @@
             mailthreads)
     final-message))
 
-
 (defun jabber-display-new-mail (jc iq-data context)
   (and context
        ;; Don't display if no new messages
        (jabber-get-mailthreads iq-data)
        ;; Display in minibuffer
        (princ (jabber-build-mailbox-string iq-data))
-       ;; (jabber-xosd-display-message (jabber-build-mailbox-string iq-data))
+       (jabber-xosd-display-message (jabber-build-mailbox-string iq-data))
        ;; Run mail notification hooks
        (run-hook-with-args 'jabber-mail-notification-hook iq-data)))
 
@@ -149,7 +156,7 @@
   ;; Listen for new mail notification from google (type "set")
   (add-to-list 'jabber-iq-set-xmlns-alist
                  (cons "google:mail:notify" 'jabber-receive-new-mail-notification))
-  ;; perform initial mail check
+  ;; perform initial mail check - this also registers new mail notify events with google
   (setq jabber-latest-mail-tid "0")
   (setq jabber-latest-mail-date "0")
   (jabber-check-new-mail))
