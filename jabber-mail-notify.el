@@ -10,8 +10,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Commentary: Google's XMPP implementation has a nice extension to notify new mail which isn't ofcourse a part of the XMPP standard.
-;;; This little plugin extends the Emacs jabber client to support this.
-;;; Installation/Usage Instructions- http://atlantisbangalore.selfip.com/~joel/projects/jabber-mail-notify.html
+;;; This little plugin extends the Emacs jabber client to support google mail notification - read more in README.html
+;;; Installation/Usage Instructions- Please read README.html
 
 ;;; Code:
 
@@ -110,13 +110,13 @@
     final-message))
 
 
-(defun jabber-display-new-mail (iq-data context)
+(defun jabber-display-new-mail (jc iq-data context)
   (and context
        ;; Don't display if no new messages
        (jabber-get-mailthreads iq-data)
        ;; Display in minibuffer
        (princ (jabber-build-mailbox-string iq-data))
-       (jabber-xosd-display-message (jabber-build-mailbox-string iq-data))
+       ;; (jabber-xosd-display-message (jabber-build-mailbox-string iq-data))
        ;; Run mail notification hooks
        (run-hook-with-args 'jabber-mail-notification-hook iq-data)))
 
@@ -131,10 +131,13 @@
         (and (setq query-children (append query-children `((newer-than-tid . ,tid))))
              (setq query-children (append query-children `((newer-than-time . ,date))))))
     ;; Send request - callback from google will be of type "get"
-    (jabber-send-iq (jabber-get-jid) "get"
-                    `(query ,query-children)
-                    #'jabber-display-new-mail t
-                    #'jabber-display-new-mail nil)))
+    (mapcar (lambda (c)
+              (jabber-send-iq c
+                              nil "get"
+                              `(query ,query-children)
+                              #'jabber-display-new-mail t
+                              #'jabber-display-new-mail nil))
+            jabber-connections)))
 
 
 (defun jabber-receive-new-mail-notification (iq-data)
