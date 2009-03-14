@@ -6,7 +6,7 @@
 ;; Created:  Nov 2008
 ;; Version: 1.1
 ;; Keywords: jabber gmail
-;; URL: http://atlantisbangalore.selfip.com/~joel/projects/jabber-mail-notify.html
+;; URL: http://github.com/joelagnel/jabber-mail-notify/
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Commentary: Google's XMPP implementation has a nice extension to notify new mail which isn't ofcourse a part of the XMPP standard.
