@@ -6,11 +6,12 @@
 ;; Created:  Nov 2008
 ;; Version: 1.1
 ;; Keywords: jabber gmail
-;; Read README.html for usage instructions
+;; URL: http://atlantisbangalore.selfip.com/~joel/projects/jabber-mail-notify.html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Commentary: Google's XMPP implementation has a nice extension to notify new mail which isn't ofcourse a part of the XMPP standard.
 ;;; This little plugin extends the Emacs jabber client to support this.
+;;; Installation/Usage Instructions- http://atlantisbangalore.selfip.com/~joel/projects/jabber-mail-notify.html
 
 ;;; Code:
 
@@ -19,7 +20,15 @@
   (setq jabber-mode-line-newmail str))
 
 (defun jabber-get-jid ()
-  (concat jabber-username "@" jabber-server))
+  (let* ((active-connections (mapcar
+                              (lambda (c)
+                                (let ((data (fsm-get-state-data c)))
+                                  (list (plist-get data :username)
+                                        (plist-get data :server))))
+                              jabber-connections))
+         (jabber-username (caar active-connections))
+         (jabber-server (cadar active-connections)))
+    (concat jabber-username "@" jabber-server)))
 
 (defun jabber-enable-debug ()
   (interactive)
@@ -143,7 +152,7 @@
              (cons "google:mail:notify" 'jabber-receive-new-mail-notification))
 
 ;; Check for new mail on connect
-(add-hook 'jabber-post-connect-hook 'jabber-initialize-mail t)
+(add-hook 'jabber-post-connect-hooks 'jabber-initialize-mail t)
 
 ;; Uncomment to enable debug log window
 ;; (jabber-enable-debug)
