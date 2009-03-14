@@ -130,7 +130,7 @@
         (equal jabber-latest-mail-date "0")
         (and (setq query-children (append query-children `((newer-than-tid . ,tid))))
              (setq query-children (append query-children `((newer-than-time . ,date))))))
-    ;; Send request - callback from google will be of type "get"
+    ;; Send "get" request - callback from google will be of type "result"
     (mapcar (lambda (c)
               (jabber-send-iq c
                               nil "get"
@@ -140,19 +140,19 @@
             jabber-connections)))
 
 
-(defun jabber-receive-new-mail-notification (iq-data)
+(defun jabber-receive-new-mail-notification (jc iq-data)
   (jabber-check-new-mail))
 
 ;;;###autoload
-(defun jabber-initialize-mail ()
-  (sit-for 15)
+(defun jabber-initialize-mail (jc)
+;  (sit-for 15)
+  ;; Listen for new mail notification from google (type "set")
+  (add-to-list 'jabber-iq-set-xmlns-alist
+                 (cons "google:mail:notify" 'jabber-receive-new-mail-notification))
+  ;; perform initial mail check
   (setq jabber-latest-mail-tid "0")
   (setq jabber-latest-mail-date "0")
   (jabber-check-new-mail))
-
-;; Listen for new mail notification from google (type "result")
-(add-to-list 'jabber-iq-set-xmlns-alist
-             (cons "google:mail:notify" 'jabber-receive-new-mail-notification))
 
 ;; Check for new mail on connect
 (add-hook 'jabber-post-connect-hooks 'jabber-initialize-mail t)
