@@ -1,0 +1,45 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  
+    <title>Emacs Jabber mail notifier</title>
+  </head><body>
+
+<h2>Joel Agnel Fernandes</h2>
+<p><a href="http://www.hackerbliss.org/">Home</a>
+  | <a href="mailto:joel@hackerbliss.org">Contact</a></p>
+
+
+    <h1><u>Emacs Jabber mail notifier</u></h1>
+    <h3>Details:</h3>
+    Google's XMPP implementation has a nice extension to notify new mail
+    which isn't ofcourse a part of the XMPP standard.<br>This little plugin
+    extends the Emacs jabber client to support this.<br>
+<h3>Compatibility:</h3>
+ - Several changes have been made to make it compatible with the latest emacs-jabber (0.7.93)<br>
+ - Make sure you have atleast a similar version (0.7 or higher)<br>
+ - I'd appreciate it if you could report any bugs or issues with your version.
+<br>
+    <h3>Installation Instructions</h3>
+    1. Download the file below, and copy it to your jabber directory. For me
+    its ~/repository/list/el/net/jabber/<br>
+    2. Open jabber.el in the same diretory and add the following line to the
+    file:<br>(require 'jabber-mail-notify)<br>
+    3. Restart emacs, or alternatively re-load the files jabber.el and
+    jabber-mail-notify.el.<br>
+    4. Have fun!
+    <h3>Usage</h3>
+Simply connecting to your google talk account will check email the
+first time and will display a list of new unread mail in the
+minibuffer. All subsequent new mail notifications will be displayed in
+the minibuffer. <br>
+    <h3>Download</h3>
+    <a href="http://atlantisbangalore.selfip.com/%7Ejoel/projects/jabber-mail-notify.el"> Download
+      jabber-mail-notify.el </a>
+<br>
+
+___________________________________________________________
+<br><br>
+(c) Joel Fernandes
+
+
+  </body></html>
